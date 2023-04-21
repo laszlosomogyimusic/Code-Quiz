@@ -30,9 +30,11 @@ button:hover {
   background-color: #8570a5;
 }
 
+/* No need this at the moment, because it breaks the list display
 .choices button {
   display: block;
 }
+*/
 
 input[type="text"] {
   font-size: 100%;
