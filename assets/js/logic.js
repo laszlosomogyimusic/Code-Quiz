@@ -80,8 +80,10 @@ function generateChoices(selectedQuestion) {
 
 //this function clears the choices list
 function clearChoices() {
-  var choicesList = document.querySelector("#choices-list");
-  choices.removeChild(choicesList);
+  if(choices.childElementCount > 0) {
+    var choicesList = document.querySelector("#choices-list");
+    choices.removeChild(choicesList);
+  }
 }
 
 //the displayQuestion shows the question and choices
