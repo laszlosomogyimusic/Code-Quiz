@@ -1,6 +1,6 @@
 var startScreen = document.querySelector("#start-screen");
 var endScreen = document.querySelector("#end-screen");
-var feedbackElement = document.querySelector("#feedback");
+var feedback = document.querySelector("#feedback");
 var timerElement = document.querySelector("#time");
 var startButton = document.querySelector("#start");
 var questions = document.querySelector("#questions");
@@ -29,39 +29,45 @@ function endGame() {
   showElement(endScreenElement);
 }
 
+function buttonClicked(event) {
+  var feedbackText = "";
+
+  if(this.dataset.state === "correct") {
+    feedbackText = "Correct answer";
+  } else {
+    feedbackText = "Wrong answer";
+  }
+
+  feedback.textContent = feedbackText;
+  showElement(feedback);
+}
+
+function generateChoices() {
+  var ol = document.createElement("ol");
+
+  for(var i=0; i<4; i++) {
+    var li = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.textContent = "Answer " + (i+1);
+    btn.addEventListener("click", buttonClicked);
+
+    if(i===1) {
+      btn.dataset.state = "correct";
+    } else {
+      btn.dataset.state = "wrong";
+    }
+    li.appendChild(btn);
+    ol.appendChild(li);
+  }
+
+  choices.appendChild(ol);
+}
+
+//the displayQuestion shows the question and choices
 function displayQuestion() {
   showElement(questions);
   questionTitle.textContent = "First Question";
-  var ol = document.createElement("ol");
-  var li1 = document.createElement("li");
-  var li2 = document.createElement("li");
-  var li3 = document.createElement("li");
-  var li4 = document.createElement("li");
-
-  var btn1 = document.createElement("button");
-  btn1.dataset.state = "correct";
-  var btn2 = document.createElement("button");
-  btn2.dataset.state = "wrong";
-  var btn3 = document.createElement("button");
-  btn3.dataset.state = "wrong";  
-  var btn4 = document.createElement("button");
-  btn4.dataset.state = "wrong";
-
-  btn1.textContent = "Answer 1";
-  btn2.textContent = "Answer 2";
-  btn3.textContent = "Answer 3";
-  btn4.textContent = "Answer 4";
-
-  li1.appendChild(btn1);
-  li2.appendChild(btn2);
-  li3.appendChild(btn3);
-  li4.appendChild(btn4);
-
-  ol.appendChild(li1);
-  ol.appendChild(li2);
-  ol.appendChild(li3);
-  ol.appendChild(li4);
-  choices.appendChild(ol);
+  generateChoices();
 }
 
 // The setTimer function starts and stops the timer and triggers endGame()
