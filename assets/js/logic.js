@@ -3,7 +3,7 @@ var endScreen = document.querySelector("#end-screen");
 var feedback = document.querySelector("#feedback");
 var timerElement = document.querySelector("#time");
 var startButton = document.querySelector("#start");
-var questions = document.querySelector("#questions");
+var questionsElement = document.querySelector("#questions");
 var questionTitle = document.querySelector("#question-title");
 var choices = document.querySelector("#choices");
 
@@ -18,7 +18,7 @@ function startGame() {
   startButton.disabled = true;
   startTimer();
   hideElement(startScreen);
-  displayQuestion();
+  displayQuestion(question2);
 }
 
 // The endGame function is called when timer reaches 0
@@ -26,36 +26,39 @@ function endGame() {
   //TBD
   startButton.disabled = false;
   showElement(startScreen);
-  showElement(endScreenElement);
+  showElement(endScreen);
 }
 
 function buttonClicked(event) {
   var feedbackText = "";
+  var audio = ""; 
 
-  if(this.dataset.state === "correct") {
+  if(this.dataset.state === answerStates.correct) {
     feedbackText = "Correct answer";
+    audio = new Audio('assets/sfx/correct.wav');
   } else {
     feedbackText = "Wrong answer";
+    audio = new Audio('assets/sfx/incorrect.wav');
   }
 
   feedback.textContent = feedbackText;
   showElement(feedback);
+  audio.play();
+
 }
 
-function generateChoices() {
+function generateChoices(selectedQuestion) {
   var ol = document.createElement("ol");
 
-  for(var i=0; i<4; i++) {
+  for(var i=1; i<=numberOfAnswers; i++) {
     var li = document.createElement("li");
     var btn = document.createElement("button");
-    btn.textContent = "Answer " + (i+1);
+    //dynamically create the variable name selectedQuestion.answer1Text, selectedQuestion.answer2Text, etc...
+    btn.textContent = eval("selectedQuestion.answer"+i+"Text");
+    //dynamically create the variable name selectedQuestion.answer1State, selectedQuestion.answer2State, etc...
+    btn.dataset.state = eval("selectedQuestion.answer"+i+"State");
     btn.addEventListener("click", buttonClicked);
 
-    if(i===1) {
-      btn.dataset.state = "correct";
-    } else {
-      btn.dataset.state = "wrong";
-    }
     li.appendChild(btn);
     ol.appendChild(li);
   }
@@ -64,10 +67,10 @@ function generateChoices() {
 }
 
 //the displayQuestion shows the question and choices
-function displayQuestion() {
-  showElement(questions);
-  questionTitle.textContent = "First Question";
-  generateChoices();
+function displayQuestion(selectedQuestion) {
+  showElement(questionsElement);
+  questionTitle.textContent = selectedQuestion.question;
+  generateChoices(selectedQuestion);
 }
 
 // The setTimer function starts and stops the timer and triggers endGame()
