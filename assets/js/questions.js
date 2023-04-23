@@ -1,12 +1,3 @@
-//this declares the number of answer per question
-var numberOfAnswers = 4;
-
-//to avoid hardcoded values when checking the answer states this variable is handy
-var answerStates = {
-  correct: "correct",
-  wrong: "wrong"
-};
-
 /***************  !!!! IMPORTANT !!! ***************************
 The questions array is at the end of the file, it must be 
 maintained when a new question is added or an existing is removed
