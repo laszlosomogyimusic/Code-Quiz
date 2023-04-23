@@ -36,6 +36,7 @@ function startGame() {
   hideElement(endScreen);
 
   startTimer();
+  //loads the first question, because the questionNumber is initialised to 0
   displayQuestion(questions[questionNumber]);
 }
 
@@ -47,12 +48,6 @@ function endGame() {
   clearChoices();
   showElement(startScreen);
   showElement(endScreen);
-}
-
-function waitMilliseconds(milliseconds) {
-  var wait = setInterval(function() {
-    console.log("wait " + milliseconds + " ms");
-  }, milliseconds);
 }
 
 function generateChoices(selectedQuestion) {
@@ -123,18 +118,23 @@ function evaluateAnswer(event) {
     if(timerCount <= 0) {
       isEndGame = true;
       //this is a trick to display 0 timercount at the end screen, because
-      //the main timer keeps going for one more round
+      //the main timer keeps going for one more round. If you set it to 0, then the
+      //end screen will display -1
       timerCount = 1;
     }
     feedbackText = "Wrong answer";
+    
     audio = new Audio('assets/sfx/incorrect.wav');
   }
 
   feedback.textContent = feedbackText;
   showElement(feedback);
   audio.play();
-  waitMilliseconds(2000);
-  prepareNextQuestion();
+
+  //the feedback is already displayed
+  //keep it on the screen for 1 second 
+  //then prepare the next question
+  setTimeout(prepareNextQuestion, 1000);
 }
 
 
