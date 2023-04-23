@@ -7,22 +7,22 @@ var questionsElement = document.querySelector("#questions");
 var questionTitle = document.querySelector("#question-title");
 var choices = document.querySelector("#choices");
 var finalScoreElement = document.querySelector("#final-score");
+var submitButton = document.querySelector("#submit");
+var initialsElement = document.querySelector("#initials");
 
 var isEndGame = false;
 
 //the actual question number (works from the questions array)
 var questionNumber = 0;
 //timer counter in seconds
-var timerCount = 0;
-//deducts 10 seconds from the timer on a wrong answer
-var penaltyOnWrongAnswer = 10;
+var timerCount = rules.timerCount;
 
 //the score number. Increments by 1 on a correct answer
 var score = 0;
 
 function initVars() {
   isEndGame = false;
-  timerCount = 50;
+  timerCount = rules.timerCount;
   questionNumber = 0;
   score = 0;
 }
@@ -114,7 +114,7 @@ function evaluateAnswer(event) {
     feedbackText = "Correct answer";
     audio = new Audio('assets/sfx/correct.wav');
   } else {
-    timerCount = timerCount - penaltyOnWrongAnswer;
+    timerCount = timerCount - rules.penaltyOnWrongAnswer;
     if(timerCount <= 0) {
       isEndGame = true;
       //this is a trick to display 0 timercount at the end screen, because
@@ -162,6 +162,26 @@ function showElement(element) {
   element.className = element.className.replace( /(?:^|\s)hide(?!\S)/g , '' );
 }
 
+//save the score to the local storage
+function saveScore() {
+  var savedScores = localStorage.getItem(localStorageElements.score)  || '[]'; // get the score, or the initial value if empty
+
+  scoreStructure.initial = initialsElement.value;
+  scoreStructure.score = score;
+
+  const highScores = [...JSON.parse(savedScores), scoreStructure] // add the result
+  .sort((a, b) => b.score- a.score) // sort descending
+  .slice(0, 5) // take highest 5
+
+  localStorage.setItem(localStorageElements.score, JSON.stringify(highScores));
+}
+
+function displayHighScore() {
+  saveScore();
+  window.location.href = "highscores.html";
+}
+
 // Attach event listener to start button to call startGame function on click
 startButton.addEventListener("click", startGame);
+submitButton.addEventListener("click", displayHighScore);
 
