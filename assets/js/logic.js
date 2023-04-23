@@ -46,7 +46,6 @@ function endGame() {
   startButton.disabled = false;
   hideElement(questionsElement);
   clearChoices();
-  showElement(startScreen);
   showElement(endScreen);
 }
 
